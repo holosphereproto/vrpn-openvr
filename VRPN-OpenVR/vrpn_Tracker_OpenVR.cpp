@@ -13,6 +13,7 @@ vrpn_Tracker_OpenVR::vrpn_Tracker_OpenVR(const std::string& name, vrpn_Connectio
 
 void vrpn_Tracker_OpenVR::updateTracking(vr::TrackedDevicePose_t *pose) {
 	if (!pose->bPoseIsValid) {
+		std::cerr << "[" << name << "] Invalid Pose" << std::endl;
 		return;
 	}
 	if (pose->eTrackingResult != vr::TrackingResult_Running_OK) {
@@ -36,7 +37,10 @@ void vrpn_Tracker_OpenVR::updateTracking(vr::TrackedDevicePose_t *pose) {
 			std::cerr << "[" << name << "] Unknown tracking result" << std::endl;
 		break;
 		}
+	} else {
+		std::cerr << "[" << name << "] OK" << std::endl;
 	}
+
 
 	// Sensor, doesn't change since we are tracking individual devices
 	d_sensor = 0;
