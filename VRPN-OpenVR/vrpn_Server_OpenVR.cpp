@@ -7,10 +7,24 @@
 vrpn_Server_OpenVR::vrpn_Server_OpenVR() {
     // Initialize OpenVR
     vr::EVRInitError eError = vr::VRInitError_None;
-    vr = std::unique_ptr<vr::IVRSystem>(vr::VR_Init(&eError, vr::VRApplication_Overlay));
-    if (eError != vr::VRInitError_None) {
-        vr.reset(nullptr);
-        std::cerr << "Unable to init VR runtime: " << vr::VR_GetVRInitErrorAsEnglishDescription(eError) << std::endl;
+    static int max_tries = 10;
+
+    // Retry some times because the base do not always give enough samples for the init process.
+    while( max_tries-- > 0) {
+        vr = std::unique_ptr<vr::IVRSystem>(vr::VR_Init(&eError, vr::VRApplication_Overlay));
+        if (eError != vr::VRInitError_None) {
+            vr.reset(nullptr);
+            std::cerr << "Unable to init VR runtime: " << vr::VR_GetVRInitErrorAsEnglishDescription(eError) << std::endl;
+        } else{
+            // Successfully initialized OpenVR, continue
+            break;
+        }
+
+        if (max_tries == 0) {
+          return;
+        }
+
+        vrpn_SleepMsecs(2000);
     }
 
     // Initialize VRPN Connection
