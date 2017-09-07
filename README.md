@@ -4,7 +4,7 @@ Each of which having the relevant vrpn devices that it supports: vrpn_Tracker fo
 for the controllers.
 
 # Installing dependencies
-First download steam [here](http://store.steampowered.com/about/).
+Follow the [README](https://github.com/ValveSoftware/SteamVR-for-Linux) from SteamVR for Linux to install Steam, SteamVR and Nvidia drivers.
 
 ## On Linux
 Install the downloaded package (change the path if it is different for you)
@@ -68,6 +68,18 @@ of the binary):
 ## On Windows
 Just launch the program from the VS solution (F5 to simple run or Ctrl+F5 for debug). Otherwise just click the play 
 button at the top of the window.
+
+
+# Troubleshooting
+
+## Headset is not detected properly
+
+A few ideas to fix this:
+
+* activate / deactivate the direct mode
+* unplug / replug the lighthouses
+* reboot the computer
+* check that your graphic driver is up-to-date: SteamVR needs the very latest drivers which are not always packaged in the default repositories, nor in the Graphic Drivers PPA.
 
 # Acknowledgements
 This is still very much a work in progress and is by no means a complete and stable solution for using OpenVR with VRPN.
