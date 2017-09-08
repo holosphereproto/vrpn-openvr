@@ -11,9 +11,9 @@ vrpn_Server_OpenVR::vrpn_Server_OpenVR() {
 
     // Retry some times because the base do not always give enough samples for the init process.
     while( max_tries-- > 0) {
-        vr = std::unique_ptr<vr::IVRSystem>(vr::VR_Init(&eError, vr::VRApplication_Overlay));
+        vr = vr::VR_Init(&eError, vr::VRApplication_Utility);
         if (eError != vr::VRInitError_None) {
-            vr.reset(nullptr);
+            vr = nullptr;
             std::cerr << "Unable to init VR runtime: " << vr::VR_GetVRInitErrorAsEnglishDescription(eError) << std::endl;
         } else{
             // Successfully initialized OpenVR, continue
@@ -37,7 +37,7 @@ vrpn_Server_OpenVR::~vrpn_Server_OpenVR() {
     vr::VR_Shutdown();
     if (connection) {
         connection->removeReference();
-        connection = NULL;
+        connection = nullptr;
     }
 }
 
@@ -64,10 +64,10 @@ void vrpn_Server_OpenVR::mainloop() {
                 vrpn_Tracker_OpenVR_HMD *hmd{nullptr};
                 auto search = hmds.find(unTrackedDevice);
                 if (search == hmds.end()) {
-                    std::unique_ptr<vrpn_Tracker_OpenVR_HMD> newHMD = std::make_unique<vrpn_Tracker_OpenVR_HMD>(
+                    auto newHMD = std::make_unique<vrpn_Tracker_OpenVR_HMD>(
                         "openvr/hmd/" + std::to_string(unTrackedDevice),
                         connection,
-                        vr.get()
+                        vr
                     );
                     hmd = newHMD.get();
                     hmds[unTrackedDevice] = std::move(newHMD);
@@ -82,10 +82,10 @@ void vrpn_Server_OpenVR::mainloop() {
                 vrpn_Tracker_OpenVR_Controller *controller{nullptr};
                 auto search = controllers.find(unTrackedDevice);
                 if (search == controllers.end()) {
-                    std::unique_ptr<vrpn_Tracker_OpenVR_Controller> newController = std::make_unique<vrpn_Tracker_OpenVR_Controller>(
+                    auto newController = std::make_unique<vrpn_Tracker_OpenVR_Controller>(
                         "openvr/controller/" + std::to_string(unTrackedDevice),
                         connection,
-                        vr.get()
+                        vr
                     );
                     controller = newController.get();
                     controllers[unTrackedDevice] = std::move(newController);
@@ -95,6 +95,25 @@ void vrpn_Server_OpenVR::mainloop() {
                 controller->updateTracking(&m_rTrackedDevicePose[unTrackedDevice]);
                 controller->updateController(unTrackedDevice);
                 controller->mainloop();
+                break;
+            }
+            case vr::TrackedDeviceClass_GenericTracker: {
+                vrpn_Tracker_OpenVR_Tracker *tracker{nullptr};
+                auto search = trackers.find(unTrackedDevice);
+                if (search == trackers.end()) {
+                    auto newTracker = std::make_unique<vrpn_Tracker_OpenVR_Tracker>(
+                        "openvr/tracker/" + std::to_string(unTrackedDevice),
+                        connection,
+                        vr
+                    );
+                    tracker = newTracker.get();
+                    trackers[unTrackedDevice] = std::move(newTracker);
+                } else {
+                    tracker = search->second.get();
+                }
+                tracker->updateTracking(&m_rTrackedDevicePose[unTrackedDevice]);
+                tracker->updateTracker(unTrackedDevice);
+                tracker->mainloop();
                 break;
             }
             default: {

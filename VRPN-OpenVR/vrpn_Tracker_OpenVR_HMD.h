@@ -10,7 +10,7 @@ class vrpn_Tracker_OpenVR_HMD :
 public:
 	vrpn_Tracker_OpenVR_HMD() = delete;
 	vrpn_Tracker_OpenVR_HMD(const std::string& name, vrpn_Connection* connection, vr::IVRSystem * vr);
-	void mainloop();
+	void mainloop() override;
 private:
 };
 

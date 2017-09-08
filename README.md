@@ -85,3 +85,18 @@ A few ideas to fix this:
 This is still very much a work in progress and is by no means a complete and stable solution for using OpenVR with VRPN.
 The primary goal of this server is to provide controller data to a Blender instance running on a separate machine 
 (but can also be used locally).
+
+
+## Notes
+
+Allowing without HMD
+
+
+(not clear yet, need tor try on a fresh install, but this blurb helped me figure something out)
+In ~/.steam/steam/steamapps/common/SteamVR/resources/settings
+Set requireHmd to false
++
+driver_null is a non-physical HMD. Instead of setting requireHmd=false, set activateMultipleDrivers=true and enable the 
+null driver. The sample driver is essentially the null driver already, so you could add any features you want 
+(different/controllable pose, setting the "alwaysActivate" in its manifest so you don't need the 
+"activateMultipleDrivers" setting, etc).

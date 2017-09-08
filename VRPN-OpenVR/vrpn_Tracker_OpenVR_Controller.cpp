@@ -1,7 +1,7 @@
 #include "vrpn_Tracker_OpenVR_Controller.h"
 
 vrpn_Tracker_OpenVR_Controller::vrpn_Tracker_OpenVR_Controller(const std::string& name, vrpn_Connection* connection, vr::IVRSystem * vr) :
-	vrpn_Tracker_OpenVR(name.c_str(), connection, vr),
+	vrpn_Tracker_OpenVR(name, connection, vr),
 	vrpn_Analog(name.c_str(), connection),
 	vrpn_Button_Filter(name.c_str(), connection)
 {
@@ -19,14 +19,14 @@ vrpn_Tracker_OpenVR_Controller::vrpn_Tracker_OpenVR_Controller(const std::string
 }
 
 void vrpn_Tracker_OpenVR_Controller::mainloop() {
-    vrpn_gettimeofday( &(vrpn_Tracker_OpenVR::timestamp), NULL );
+    vrpn_gettimeofday( &(vrpn_Tracker_OpenVR::timestamp), nullptr );
 	vrpn_Tracker_OpenVR::mainloop();
 
-	vrpn_gettimeofday( &(vrpn_Analog::timestamp), NULL );
+	vrpn_gettimeofday( &(vrpn_Analog::timestamp), nullptr );
 	vrpn_Analog::report_changes();
 
 
-    vrpn_gettimeofday( &(vrpn_Button_Filter::timestamp), NULL );
+    vrpn_gettimeofday( &(vrpn_Button_Filter::timestamp), nullptr );
 	vrpn_Button_Filter::report_changes();
 }
 

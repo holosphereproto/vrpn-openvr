@@ -55,7 +55,7 @@ void vrpn_Tracker_OpenVR::updateTracking(vr::TrackedDevicePose_t *pose) {
 	q_from_col_matrix(d_quat, matrix);
 
     // Pack message
-	vrpn_gettimeofday(&timestamp, NULL);
+	vrpn_gettimeofday(&timestamp, nullptr);
 	char msgbuf[1000];
 	vrpn_int32 len = vrpn_Tracker::encode_to(msgbuf);
 	if (d_connection->pack_message(len, timestamp, position_m_id, d_sender_id, msgbuf, vrpn_CONNECTION_LOW_LATENCY)) {
@@ -64,7 +64,7 @@ void vrpn_Tracker_OpenVR::updateTracking(vr::TrackedDevicePose_t *pose) {
 }
 
 void vrpn_Tracker_OpenVR::mainloop() {
-    vrpn_gettimeofday( &(vrpn_Tracker_OpenVR::timestamp), NULL );
+    vrpn_gettimeofday( &(vrpn_Tracker_OpenVR::timestamp), nullptr );
 	vrpn_Tracker::server_mainloop();
 }
 

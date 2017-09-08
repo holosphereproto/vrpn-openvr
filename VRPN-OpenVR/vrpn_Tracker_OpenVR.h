@@ -10,7 +10,7 @@ class vrpn_Tracker_OpenVR :
 {
 public:
 	vrpn_Tracker_OpenVR(const std::string& name, vrpn_Connection* connection, vr::IVRSystem * vr);
-	void mainloop();
+	void mainloop() override;
 	void updateTracking(vr::TrackedDevicePose_t *pose);
 protected:
 	vr::IVRSystem * vr;

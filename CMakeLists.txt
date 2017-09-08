@@ -42,6 +42,7 @@ add_executable(vrpnOpenVR
     VRPN-OpenVR/vrpn_Tracker_OpenVR.cpp
     VRPN-OpenVR/vrpn_Tracker_OpenVR_HMD.cpp
     VRPN-OpenVR/vrpn_Tracker_OpenVR_Controller.cpp
+    VRPN-OpenVR/vrpn_Tracker_OpenVR_Tracker.cpp
     )
 
 add_dependencies(vrpnOpenVR vrpn)
