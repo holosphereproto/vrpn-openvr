@@ -49,6 +49,7 @@ private:
     vrpn_Connection                                                                               *connection;
     std::unordered_map<vr::TrackedDeviceIndex_t, std::unique_ptr<vrpn_Tracker_OpenVR_HMD>>        hmds{};
     std::unordered_map<vr::TrackedDeviceIndex_t, std::unique_ptr<vrpn_Tracker_OpenVR_Controller>> controllers{};
+    std::unordered_map<vr::ETrackedControllerRole, std::unique_ptr<vrpn_Tracker_OpenVR_Controller>> hands{};
     std::unordered_map<vr::TrackedDeviceIndex_t, std::unique_ptr<vrpn_Tracker_OpenVR_Tracker>>    trackers{};
 };
 
