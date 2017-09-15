@@ -79,30 +79,74 @@ void vrpn_Server_OpenVR::mainloop() {
                 break;
             }
             case vr::TrackedDeviceClass_Controller: {
-                vrpn_Tracker_OpenVR_Controller *controller{nullptr};
+                vrpn_Tracker_OpenVR_Controller *controller{ nullptr };
                 auto search = controllers.find(unTrackedDevice);
                 if (search == controllers.end()) {
+                    std::string device_name = std::to_string(unTrackedDevice);
+
+                    char device_id[255];
+                    uint32_t len = vr->GetStringTrackedDeviceProperty(unTrackedDevice, vr::Prop_SerialNumber_String, device_id, 255);
+                    if (len > 0)
+                        device_name = device_id;
+
                     auto newController = std::make_unique<vrpn_Tracker_OpenVR_Controller>(
-                        "openvr/controller/" + std::to_string(unTrackedDevice),
+                        "openvr/controller/" + device_name,
                         connection,
                         vr
                     );
                     controller = newController.get();
                     controllers[unTrackedDevice] = std::move(newController);
+                }
+                else {
+                  controller = search->second.get();
+                }
+                controller->updateTracking(&m_rTrackedDevicePose[unTrackedDevice]);
+                controller->updateController(unTrackedDevice);
+                controller->mainloop();
+            }
+            {
+                vr::ETrackedControllerRole role = vr->GetControllerRoleForTrackedDeviceIndex(unTrackedDevice);
+                if (role == vr::TrackedControllerRole_Invalid)
+                    break;
+
+                vrpn_Tracker_OpenVR_Controller *controller{ nullptr };
+                auto search = hands.find(role);
+                if (search == hands.end()) {
+                    std::string device_name;
+                    if (role == vr::TrackedControllerRole_LeftHand)
+                        device_name = "left";
+                    else
+                        device_name = "right";
+
+                    auto newController = std::make_unique<vrpn_Tracker_OpenVR_Controller>
+                      ("openvr/controller/" + device_name,
+                       connection,
+                       vr);
+                    controller = newController.get();
+                    hands[role] = std::move(newController);
                 } else {
                     controller = search->second.get();
                 }
                 controller->updateTracking(&m_rTrackedDevicePose[unTrackedDevice]);
                 controller->updateController(unTrackedDevice);
                 controller->mainloop();
+
                 break;
             }
             case vr::TrackedDeviceClass_GenericTracker: {
                 vrpn_Tracker_OpenVR_Tracker *tracker{nullptr};
                 auto search = trackers.find(unTrackedDevice);
                 if (search == trackers.end()) {
+                    std::string device_name = std::to_string(unTrackedDevice);
+
+                    char device_id[255];
+                    uint32_t len = vr->GetStringTrackedDeviceProperty(unTrackedDevice, vr::Prop_SerialNumber_String, device_id, 255);
+                    if (len > 0)
+                      device_name = device_id;
+
+                  
                     auto newTracker = std::make_unique<vrpn_Tracker_OpenVR_Tracker>(
-                        "openvr/tracker/" + std::to_string(unTrackedDevice),
+                        "openvr/tracker/" + device_name,
                         connection,
                         vr
                     );
