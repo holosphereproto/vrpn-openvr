@@ -9,6 +9,8 @@ vrpn_Server_OpenVR::vrpn_Server_OpenVR() {
     vr::EVRInitError eError = vr::VRInitError_None;
     static int max_tries = 10;
 
+    std::cout << "VRPN Server OpenVR" << std::endl;
+
     // Retry some times because the base do not always give enough samples for the init process.
     while( max_tries-- > 0) {
         vr = vr::VR_Init(&eError, vr::VRApplication_Utility);
@@ -146,7 +148,8 @@ void vrpn_Server_OpenVR::mainloop() {
 
                   
                     auto newTracker = std::make_unique<vrpn_Tracker_OpenVR_Tracker>(
-                        "openvr/tracker/" + device_name,
+                        "trackerdata",
+                        //"openvr/tracker/" + device_name,
                         connection,
                         vr
                     );
