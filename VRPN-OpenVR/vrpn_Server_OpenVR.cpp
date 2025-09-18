@@ -13,6 +13,7 @@ vrpn_Server_OpenVR::vrpn_Server_OpenVR() {
 
     // Retry some times because the base do not always give enough samples for the init process.
     while( max_tries-- > 0) {
+        std::cout << "VR Runtime Path is: " << vr::VR_RuntimePath() << std::endl;
         vr = vr::VR_Init(&eError, vr::VRApplication_Utility);
         if (eError != vr::VRInitError_None) {
             vr = nullptr;
